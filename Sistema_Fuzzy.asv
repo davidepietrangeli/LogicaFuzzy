@@ -92,9 +92,6 @@ fis = addrule(fis, rule13);
 rule14 = "IF posizione_classifica_piloti IS alta AND stato_di_forma IS ottimo AND vittorie_stagionali IS molte AND infortunio_pilota IS sano THEN classifica_piloti IS posizione2";
 fis = addrule(fis, rule14);
 
-rule15 = "IF posizione_classifica_piloti IS bassa AND stato_di_forma IS scarso AND vittorie_stagionali IS poche AND cadute_stagionali IS molte THEN classifica_piloti IS posizione21";
-fis = addrule(fis, rule15);
-
 
 
 
