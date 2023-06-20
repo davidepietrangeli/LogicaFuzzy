@@ -1,0 +1,10 @@
+fis = newfis('SistemaFuzzy');
+
+% Definisci le variabili di input e di output come descritte in precedenza
+
+% Definisci le funzioni di appartenenza per le variabili di input e output come descritte in precedenza
+
+% Aggiungi le regole fuzzy come descritte in precedenza
+
+% Salva il sistema fuzzy in un file separato
+writefis(fis, 'sistema_fuzzy.fis');
