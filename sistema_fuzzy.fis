@@ -1,55 +1,111 @@
-% Crea l'oggetto per il sistema fuzzy
-fis = newfis('SistemaFuzzy');
+[System]
+Name='sistema_fuzzy'
+Type='mamdani'
+Version=2.0
+NumInputs=6
+NumOutputs=1
+NumRules=38
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
 
-% Definisci le variabili di input
-fis = addvar(fis, 'input', 'posizione_classifica_piloti', [1 22]);
-fis = addvar(fis, 'input', 'stato_di_forma', [1 5]);
-fis = addvar(fis, 'input', 'vittorie_stagionali', [0 5]);
-fis = addvar(fis, 'input', 'infortunio_pilota', [0 5]);
-fis = addvar(fis, 'input', 'cadute_stagionali', [0 5]);
-fis = addvar(fis, 'input', 'classifica_marca_moto', [1 5]);
+[Input1]
+Name='classifica_piloti'
+Range=[1 22]
+NumMFs=4
+MF1='top3':'trimf',[1 1 3]
+MF2='top5':'trimf',[1 5 5]
+MF3='top10':'trimf',[1 10 10]
+MF4='over10':'trapmf',[10 16 20 22]
 
-% Definisci le funzioni di appartenenza per le variabili di input e output
-fis = addmf(fis, 'input', 1, 'alta', 'trimf', [1 1 7]);
-fis = addmf(fis, 'input', 1, 'media', 'trimf', [5 11 17]);
-fis = addmf(fis, 'input', 1, 'bassa', 'trimf', [13 22 22]);
+[Input2]
+Name='stato_di_forma'
+Range=[0 5]
+NumMFs=3
+MF1='ottimo':'trimf',[3.04137323943662 5 5]
+MF2='medio':'trimf',[1.03 2.03 3.47271126760563]
+MF3='scarso':'trimf',[0 0 1.70334507042254]
 
-fis = addmf(fis, 'input', 2, 'ottimo', 'trimf', [1 1 2]);
-fis = addmf(fis, 'input', 2, 'buono', 'trimf', [1 3 5]);
-fis = addmf(fis, 'input', 2, 'medio', 'trimf', [2 4 6]);
-fis = addmf(fis, 'input', 2, 'scarso', 'trimf', [3 5 5]);
+[Input3]
+Name='vittorie_stagionali'
+Range=[0 5]
+NumMFs=3
+MF1='nessuna':'trimf',[0 0 1.5]
+MF2='una':'trimf',[1.18 2.21390845070423 3.5]
+MF3='2o+':'trimf',[2.52 5 5]
 
-fis = addmf(fis, 'input', 3, 'nessuna', 'trimf', [0 0 1]);
-fis = addmf(fis, 'input', 3, 'poche', 'trimf', [1 2 3]);
-fis = addmf(fis, 'input', 3, 'alcune', 'trimf', [2 3 4]);
-fis = addmf(fis, 'input', 3, 'molte', 'trimf', [4 5 5]);
+[Input4]
+Name='salute_pilota'
+Range=[0 1]
+NumMFs=2
+MF1='sano':'trimf',[0 0 0.794894366197183]
+MF2='infortunato':'trimf',[0.210387323943662 1 1]
 
-fis = addmf(fis, 'input', 4, 'sano', 'trapmf', [0 0 1 1]);
-fis = addmf(fis, 'input', 4, 'indolenzito', 'trapmf', [0 1 2 3]);
-fis = addmf(fis, 'input', 4, 'infortunato', 'trapmf', [2 3 5 5]);
+[Input5]
+Name='podi_stagionali'
+Range=[0 5]
+NumMFs=3
+MF1='nessuno':'trimf',[0 0 1.80017605633803]
+MF2='1':'trimf',[1.25 2.09066901408451 3.5]
+MF3='2o+':'trimf',[2.93573943661972 5 5]
 
-fis = addmf(fis, 'input', 5, 'nessuna', 'trimf', [0 0 1]);
-fis = addmf(fis, 'input', 5, 'poche', 'trimf', [0 1 2]);
-fis = addmf(fis, 'input', 5, 'alcune', 'trimf', [1 2 3]);
-fis = addmf(fis, 'input', 5, 'molte', 'trimf', [2 3 5]);
+[Input6]
+Name='classifica_marca_moto'
+Range=[1 4]
+NumMFs=4
+MF1='prima':'trapmf',[1 1 1.625 2.5]
+MF2='seconda':'trapmf',[1 2.32585139318885 2.76 4]
+MF3='terza':'trapmf',[2.5 3.05495356037152 3.3 4]
+MF4='quarta':'trapmf',[2.5 3.54 3.70510835913313 4]
 
-fis = addmf(fis, 'input', 6, 'prima', 'trapmf', [0 0 1 2]);
-fis = addmf(fis, 'input', 6, 'seconda', 'trapmf', [1 2 3 4]);
-fis = addmf(fis, 'input', 6, 'terza', 'trapmf', [3 4 5 6]);
-fis = addmf(fis, 'input', 6, 'quarta', 'trapmf', [5 6 7 8]);
-fis = addmf(fis, 'input', 6, 'quinta', 'trapmf', [7 8 9 10]);
+[Output1]
+Name='classifica_gara'
+Range=[1 22]
+NumMFs=5
+MF1='podio':'trimf',[1 1 3]
+MF2='top10':'trimf',[1 10 10]
+MF3='over10':'trapmf',[10 16 18 20]
+MF4='top5':'trimf',[1 5 5]
+MF5='Ultime':'trapmf',[21 21.8 22 22]
 
-% Definizione della variabile di output fuzzy
-fis = addvar(fis, 'output', 'classifica_piloti', [1 22]);
-
-% Definizione delle funzioni di appartenenza per la variabile di output
-for i = 1:22
-    fis = addmf(fis, 'output', 1, ['posizione', num2str(i)], 'trimf', [i-1 i i+1]);
-end
-
-% Aggiungi le regole fuzzy
-rule1 = "IF posizione_classifica_piloti IS bassa AND stato_di_forma IS scarso AND vittorie_stagionali IS poche THEN classifica_piloti IS posizione10";
-fis = addrule(fis, rule1);
-
-% Salva il sistema fuzzy in un file separato
-writefis(fis, 'sistema_fuzzy.fis');
+[Rules]
+1 1 3 1 3 1, 1 (1) : 1
+1 1 3 1 3 2, 1 (1) : 1
+1 1 2 1 3 1, 1 (1) : 1
+1 1 2 1 3 2, 1 (1) : 1
+1 1 1 1 3 1, 1 (1) : 1
+1 1 1 1 3 2, 1 (1) : 1
+2 1 2 1 3 1, 4 (1) : 1
+2 1 2 1 3 2, 4 (1) : 1
+2 1 1 1 3 1, 4 (1) : 1
+2 1 1 1 3 2, 4 (1) : 1
+2 1 2 1 2 1, 4 (1) : 1
+2 1 2 1 2 2, 4 (1) : 1
+3 2 1 1 1 1, 2 (1) : 1
+3 2 1 1 1 2, 2 (1) : 1
+3 2 1 1 1 3, 2 (1) : 1
+3 2 1 1 2 1, 2 (1) : 1
+3 2 1 1 2 2, 2 (1) : 1
+3 2 1 1 2 3, 2 (1) : 1
+3 2 1 1 3 1, 2 (1) : 1
+3 2 1 1 3 2, 2 (1) : 1
+4 2 1 1 1 3, 3 (1) : 1
+4 2 1 1 1 4, 3 (1) : 1
+4 3 1 1 1 3, 3 (1) : 1
+4 3 1 1 1 4, 3 (1) : 1
+0 0 0 2 0 0, 5 (1) : 1
+0 0 3 0 0 1, 1 (1) : 1
+1 3 3 1 3 1, 4 (1) : 1
+1 3 3 1 3 2, 4 (1) : 1
+1 3 2 1 3 2, 4 (1) : 1
+2 3 2 1 3 1, 4 (1) : 1
+2 3 2 1 3 2, 4 (1) : 1
+2 2 2 1 2 2, 4 (1) : 1
+2 2 2 1 2 3, 4 (1) : 1
+2 2 2 1 3 2, 4 (1) : 1
+3 2 1 1 3 2, 4 (1) : 1
+2 1 1 1 3 2, 4 (1) : 1
+2 2 1 1 3 2, 4 (1) : 1
+3 2 1 1 3 2, 4 (1) : 1
